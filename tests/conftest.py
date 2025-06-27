@@ -1,24 +1,35 @@
-import pytest
 import requests
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from config import BASE_URL, ADMIN_CREDS
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+import pytest
+
 
 @pytest.fixture(scope="function")
 def browser():
-    """Фикстура для инициализации браузера."""
+    """Фикстура для инициализации браузера в CI"""
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
+
+    chrome_options.add_argument("--headless=new")  # Новый headless-режим (Chrome 112+)
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    """Во избежание непредвиденных проблем с версиями драйвера"""
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    chrome_options.add_argument("--window-size=1920,1080")
+
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-extensions")
+
+    driver = webdriver.Chrome(
+        service=ChromeService(ChromeDriverManager().install()),
+        options=chrome_options
+    )
+
     driver.implicitly_wait(5)
     yield driver
     driver.quit()
