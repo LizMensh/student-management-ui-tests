@@ -13,17 +13,12 @@
     pytest -v tests/test_add_student.py
     ```
 
-3. Для интеграции с TestIT:
-    ```commandline
-    pytest --testit
-    ```
 ## **Технологии**  
-- Python 3.9
+- Python 3.11
 - Selenium
 - Pytest 
 - GitHub Actions
 - TestIT (TMS)
-
 
 ---
 
